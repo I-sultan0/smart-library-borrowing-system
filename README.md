@@ -166,7 +166,7 @@ JWT_EXPIRES=7d
 
 ```bash
 npm install
-npm start
+npm run dev
 ```
 
 ### Frontend
@@ -175,8 +175,6 @@ npm start
 npm install
 npm run dev
 ```
-
-
 
 ## Author
 
