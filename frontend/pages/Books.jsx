@@ -10,13 +10,9 @@ function Books() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const booksPerPage = 8;
-
   const lastBookIndex = currentPage * booksPerPage;
-
   const firstBookIndex = lastBookIndex - booksPerPage;
-
   const currentBooks = books.slice(firstBookIndex, lastBookIndex);
-
   const totalPages = Math.ceil(books.length / booksPerPage);
 
   const fetchBooks = async () => {
