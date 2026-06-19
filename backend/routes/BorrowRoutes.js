@@ -5,11 +5,13 @@ import {
   returnCtrl,
 } from "../controllers/BorrowController.js";
 import authMiddleware from "../middleware/middleware.js";
+import { historyCtrl } from "../controllers/HistoryController.js";
 
 const router = express.Router();
 
 router.post("/", authMiddleware, borrowCtrl);
 router.post("/:borrowId/submit", authMiddleware, returnCtrl);
 router.get("/:borrowId/summary", authMiddleware, borrowSummaryCtrl);
+router.get("/history", authMiddleware, historyCtrl);
 
 export default router;

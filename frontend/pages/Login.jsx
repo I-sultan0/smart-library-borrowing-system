@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 function Login() {
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -20,7 +20,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
       const response = await api.post("/auth/login", formData);
 
@@ -29,6 +29,8 @@ function Login() {
       navigate("/books");
     } catch (error) {
       toast.error(error.response?.data?.message || "Login Failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -76,18 +78,20 @@ function Login() {
 
           <button
             type="submit"
+            disabled={loading}
             className="
             w-full
             bg-blue-600
             hover:bg-blue-700
             text-white
             p-3
+            cursor-pointer
             rounded-lg
             font-semibold
             transition
           "
           >
-            Login
+            {loading ? "Please Wait..." : "Login"}
           </button>
         </form>
 

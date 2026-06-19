@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import api from "../services/api";
+import Loader from "../components/Loader";
 
 function Profile() {
   const [profile, setProfile] = useState(null);
@@ -26,7 +27,7 @@ function Profile() {
   }, []);
 
   if (!profile) {
-    return <h2>Loading...</h2>;
+    return <Loader />;
   }
 
   return (

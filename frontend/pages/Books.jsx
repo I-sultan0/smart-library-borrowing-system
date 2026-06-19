@@ -2,28 +2,43 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 import Navbar from "../components/Navbar";
 import { toast } from "react-toastify";
+import Loader from "../components/Loader";
 
 function Books() {
   const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const booksPerPage = 8;
+
+  const lastBookIndex = currentPage * booksPerPage;
+
+  const firstBookIndex = lastBookIndex - booksPerPage;
+
+  const currentBooks = books.slice(firstBookIndex, lastBookIndex);
+
+  const totalPages = Math.ceil(books.length / booksPerPage);
+
+  const fetchBooks = async () => {
+    try {
+      const response = await api.get("/books");
+
+      setBooks(response.data.data);
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const response = await api.get("/books");
-
-        setBooks(response.data.data);
-      } catch (error) {
-        toast.error(error);
-      }
-    };
-
     fetchBooks();
   }, []);
 
   const borrowBook = async (bookId) => {
     try {
       const token = localStorage.getItem("token");
-
+      setLoading(true);
       await api.post(
         "/borrow",
         {
@@ -41,9 +56,13 @@ function Books() {
       fetchBooks();
     } catch (error) {
       toast.error(error.response?.data?.message);
+    } finally {
+      setLoading(false);
     }
   };
-
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <>
       <Navbar />
@@ -68,7 +87,7 @@ function Books() {
             gap-6
           "
           >
-            {books.map((book) => (
+            {currentBooks.map((book) => (
               <div
                 key={book._id}
                 className="
@@ -122,6 +141,7 @@ function Books() {
                   rounded-lg
                   font-semibold
                   transition
+                  cursor-pointer
                   disabled:bg-gray-400
                   disabled:cursor-not-allowed
                 "
@@ -132,6 +152,44 @@ function Books() {
             ))}
           </div>
         </div>
+      </div>
+      <div className="flex justify-center gap-2 mt-10">
+        <button
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((prev) => prev - 1)}
+          className="
+      px-4
+      py-2
+      bg-white
+      border
+      rounded-lg
+      disabled:opacity-50
+            cursor-pointer
+
+    "
+        >
+          Previous
+        </button>
+
+        <span className="px-4 py-2">
+          Page {currentPage} of {totalPages}
+        </span>
+
+        <button
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((prev) => prev + 1)}
+          className="
+      px-4
+      py-2
+      bg-white
+      border
+      rounded-lg
+      disabled:opacity-50
+      cursor-pointer
+    "
+        >
+          Next
+        </button>
       </div>
     </>
   );

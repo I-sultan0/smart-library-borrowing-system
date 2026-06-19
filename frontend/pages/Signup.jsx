@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 
 function Signup() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -21,6 +22,7 @@ function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await api.post("/auth/signup", formData);
@@ -30,6 +32,8 @@ function Signup() {
       navigate("/books");
     } catch (error) {
       toast.error(error.response?.data?.message || "Signup Failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -94,18 +98,20 @@ function Signup() {
 
           <button
             type="submit"
+            disabled={loading}
             className="
             w-full
             bg-blue-600
             hover:bg-blue-700
             text-white
             p-3
+            cursor-pointer
             rounded-lg
             font-semibold
             transition
           "
           >
-            Signup
+            {loading ? "Please Wait..." : "Signup"}
           </button>
         </form>
 
