@@ -176,19 +176,7 @@ npm install
 npm run dev
 ```
 
----
 
-## Future Improvements
-
-- Payment History
-- Overdue Fine Calculation
-- Borrow History Page
-- Search Books
-- Pagination
-- Admin Panel
-- Email Notifications
-
----
 
 ## Author
 
